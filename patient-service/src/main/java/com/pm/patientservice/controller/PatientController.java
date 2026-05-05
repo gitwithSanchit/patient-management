@@ -4,8 +4,11 @@ import com.pm.patientservice.dto.PatientRequestDTO;
 import com.pm.patientservice.dto.PatientResponseDTO;
 import com.pm.patientservice.dto.validators.CreatePatientValidationGroup;
 import com.pm.patientservice.service.PatientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
+import org.aspectj.bridge.IMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/patients")
+@Tag(name = "Patient", description = "API for managing patients")
 public class PatientController {
     private final PatientService patientService;
 
@@ -23,6 +27,7 @@ public class PatientController {
     }
 
     @GetMapping
+    @Operation(summary = "Get patients")
     public ResponseEntity<List<PatientResponseDTO>> getPatients() {
 
         List<PatientResponseDTO> patients = patientService.getPatients();
@@ -30,6 +35,7 @@ public class PatientController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new patient")
     public ResponseEntity<PatientResponseDTO> createPatients(
             @Validated({Default.class, CreatePatientValidationGroup.class}) @RequestBody PatientRequestDTO patientRequestDTO) {
 
@@ -38,6 +44,7 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update a patient")
     public ResponseEntity<PatientResponseDTO> updatePatients(
             @PathVariable UUID id, @Validated({Default.class}) @RequestBody PatientRequestDTO patientRequestDTO) {
 
@@ -46,6 +53,7 @@ public class PatientController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a patient")
     public ResponseEntity<Void> deletePatients(@PathVariable UUID id) {
         patientService.deletePatients(id);
         return ResponseEntity.noContent().build();
